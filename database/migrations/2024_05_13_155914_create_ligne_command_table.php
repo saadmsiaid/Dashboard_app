@@ -11,10 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('ligne_commands', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('command_id')->constrained('commands')->onDelete('cascade');
-            $table->foreignId('product_id')->constrained('products')->onDelete('cascade');
+        Schema::create('ligne_command', function (Blueprint $table) {
+            $table->unsignedBigInteger('command_id');
+            $table->unsignedBigInteger('product_id');
+            $table->foreign('command_id')->references("id")->on("commands");
+            $table->foreign('product_id')->references("id")->on("products");
             $table->integer('quantity');
             $table->decimal('price_per_unit', 8, 2);
             $table->decimal('total_price', 8, 2);
@@ -27,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('ligne_commands');
+        Schema::dropIfExists('ligne_command');
     }
 };
