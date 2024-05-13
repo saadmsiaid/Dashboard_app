@@ -30,8 +30,7 @@ class CategoryController extends Controller
             'photo' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'desc' => 'nullable|string',
         ]);
-
-        // Handle file upload and rename the image
+        if($request->hasFile('photo')){
         $ext = $request->photo->extension();
         $name = "img_" . now()->valueOf() . "." . $ext;
         $path = $request->photo->storeAs("images", $name, "public");
@@ -42,7 +41,7 @@ class CategoryController extends Controller
             'photo' => $path,
             'desc' => $validatedData['desc'],
         ]);
-
+}
         return redirect()->route('categories.index')->with('success', 'Category created successfully.');
     }
 

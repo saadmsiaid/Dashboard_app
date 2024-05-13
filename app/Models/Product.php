@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Product extends Model
 {
@@ -12,14 +14,17 @@ class Product extends Model
     public $table = "products";
 
 
-    public function category()
+    public function Category() :BelongsTo
     {
-        return $this->belongsTo(Category::class, 'category_id');
+        return $this->belongsTo(Category::class);
     }
-
-    public function ligneCommands()
-    {
-        return $this->hasMany(LigneCommand::class);
+    public function commands() : BelongsToMany{
+       return $this->belongsToMany(Command::class,"ligne_command","product_id");
     }
+   
+    // public function ligneCommands()
+    // {
+    //     return $this->hasMany(LigneCommand::class);
+    // }
 }
     
