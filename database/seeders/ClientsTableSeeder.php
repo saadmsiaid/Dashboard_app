@@ -4,6 +4,7 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use App\Models\Client;
 use Faker\Factory as Faker;
+use Illuminate\Support\Facades\DB;
 
 class ClientsTableSeeder extends Seeder
 {
@@ -11,13 +12,15 @@ class ClientsTableSeeder extends Seeder
     {
         $faker = Faker::create();
 
-        for ($i = 0; $i < 10; $i++) {
-            Client::create([
+        for ($i = 0; $i < 15; $i++) {
+            DB::table('clients')->insert([
                 'name' => $faker->name,
+                'avatar' => $faker->imageUrl(100, 100, 'people'),
                 'email' => $faker->unique()->safeEmail,
                 'address' => $faker->address,
                 'phone' => $faker->phoneNumber,
-                'avatar' => $faker->imageUrl($width = 200, $height = 200),
+                'created_at' => now(),
+                'updated_at' => now(),
             ]);
         }
     }

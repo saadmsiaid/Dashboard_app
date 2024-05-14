@@ -24,7 +24,7 @@ class CategoryController extends Controller
 
     public function store(Request $request)
     {
-        // Validate the request data
+      
         $validatedData = $request->validate([
             'name' => 'required|string',
             'photo' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
@@ -35,7 +35,7 @@ class CategoryController extends Controller
         $name = "img_" . now()->valueOf() . "." . $ext;
         $path = $request->photo->storeAs("images", $name, "public");
 
-        // Create a new category record
+     
         Category::create([
             'name' => $validatedData['name'],
             'photo' => $path,
@@ -81,10 +81,10 @@ class CategoryController extends Controller
     
         if ($photoPath) {
           
-            Storage::disk('public')->delete($photoPath); // Delete the photo
+            Storage::disk('public')->delete($photoPath); 
         }
     
-        $category->delete(); // Delete the category
+        $category->delete(); 
     
         return redirect()->route('categories.index')->with('success', 'Category deleted successfully.');
     }

@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Client;
 use App\Models\Command;
 use App\Models\LigneCommand;
+use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class CommandController extends Controller
 {
@@ -21,14 +24,15 @@ class CommandController extends Controller
 
     /**
      * Show the form for creating a new resource.
-     */public function show($id)
+     */public function show($commandId)
 {
-    $ligneCommandes = LigneCommand::with('products', 'command.client')
-    ->where('command_id', $id)
-    ->toSql(); // Get the SQL query
-   // dd($ligneCommandes);
+    $command = Command::findOrFail($commandId); 
 
-    return view('command.show', ['ligneCommandes' => $ligneCommandes]);
+    $command->load('products'); 
+
+    return view('command.show', compact('command'));
+  
+
 }
     
 
@@ -43,25 +47,55 @@ class CommandController extends Controller
     /**
      * Display the specified resource.
      */
-    public function edit(Command $command)
+    public function edit($id)
     {
-        // Retrieve the command and pass it to the edit view
-        return view('commands.edit', compact('command'));
+        $command = Command::with('products')->findOrFail($id);
+        $clients = Client::all();
+        return view('command.edit', compact('command','clients'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        $validatedData = $request->validate([
+            'client_id' => 'required|exists:clients,id',
+            'status' => 'required|string',
+            'products' => 'required' 
+        ]);
+    
+        DB::beginTransaction();
+    
+        try {
+            $command = Command::findOrFail($id);
+    
+            $command->update([
+                'client_id' => $validatedData['client_id'],
+                'status' => $validatedData['status'],
+            ]);
+    
+            foreach ($validatedData['products'] as $productData) {
+                $product = Product::find($productData['id']);
+    
+                if ($product) {
+                    $command->products()->syncWithoutDetaching([
+                        $product->id => [
+                            'quantity' => $productData['quantity'],
+                            'price_per_unit' => $productData['price_per_unit'],
+                            'total_price' => $productData['quantity'] * $productData['price_per_unit'] 
+                        ]
+                    ]);
+                } 
+            }
+    
+            DB::commit();
+    
+            return redirect()->route('commands.show', $command->id)->with('success', 'Command updated successfully!');
+        } catch (\Exception $e) {
+            DB::rollback();
+            return redirect()->back()->with('error', 'An error occurred while updating the command.');
+        }
     }
     
 
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
     function destroy($id) {
   
         DB::table('commands')->where('id', $id)->delete();

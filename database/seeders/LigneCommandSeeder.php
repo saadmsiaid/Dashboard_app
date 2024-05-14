@@ -4,24 +4,35 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-// LigneCommandSeeder.php
-use App\Models\LigneCommand;
+use Illuminate\Support\Facades\DB;
 use Faker\Factory as Faker;
+
 
 class LigneCommandSeeder extends Seeder
 {
-    public function run()
+    /**
+     * Run the database seeds.
+     */
+    public function run(): void
     {
         $faker = Faker::create();
 
-        foreach (range(1, 10) as $index) {
-            LigneCommand::create([
-                'command_id' => $faker->numberBetween(1, 9), // Assuming you have 10 commands
-                'product_id' => $faker->numberBetween(1, 10), // Assuming you have 10 products
-                'quantity' => $faker->numberBetween(1, 10),
-                'price_per_unit' => $faker->randomFloat(2, 10, 100),
-                'total_price' => $faker->randomFloat(2, 100, 1000)
+        $commandIds = DB::table('commands')->pluck('id');
+        $productIds = DB::table('products')->pluck('id');
+
+        for ($i = 0; $i < 50; $i++) {
+            $productId = $faker->randomElement($productIds);
+            $productPrice = DB::table('products')->where('id', $productId)->value('pu');
+
+            DB::table('ligne_command')->insert([
+                'command_id' => $faker->randomElement($commandIds),
+                'product_id' => $productId,
+                'quantity' => $faker->numberBetween(1, 5),
+                'price_per_unit' => $productPrice,
+                'total_price' => $productPrice * $faker->numberBetween(1, 5),
+                'created_at' => now(),
+                'updated_at' => now(),
             ]);
-        }
     }
+}
 }

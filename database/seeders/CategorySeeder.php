@@ -7,6 +7,7 @@ use Illuminate\Database\Seeder;
 // CategorySeeder.php
 use App\Models\Category;
 use Faker\Factory as Faker;
+use Illuminate\Support\Facades\DB;
 
 class CategorySeeder extends Seeder
 {
@@ -14,11 +15,13 @@ class CategorySeeder extends Seeder
     {
         $faker = Faker::create();
 
-        foreach (range(1, 5) as $index) {
-            Category::create([
+        for ($i = 0; $i < 10; $i++) {
+            DB::table('categories')->insert([
                 'name' => $faker->word,
-                'photo' => $faker->imageUrl($width = 200, $height = 200),
-                'desc' => $faker->sentence
+                'photo' => $faker->imageUrl($width = 400, $height = 400),
+                'desc' => $faker->sentence,
+                'created_at' => now(),
+                'updated_at' => now(),
             ]);
         }
     }

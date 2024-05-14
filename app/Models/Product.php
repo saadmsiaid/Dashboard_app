@@ -19,12 +19,9 @@ class Product extends Model
         return $this->belongsTo(Category::class);
     }
     public function commands() : BelongsToMany{
-       return $this->belongsToMany(Command::class,"ligne_command","product_id");
+       return $this->belongsToMany(Command::class,"ligne_command","product_id")->withPivot('quantity', 'price_per_unit', 'total_price');;
     }
    
-    // public function ligneCommands()
-    // {
-    //     return $this->hasMany(LigneCommand::class);
-    // }
+ 
 }
     

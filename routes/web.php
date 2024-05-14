@@ -55,8 +55,9 @@ Route::resource('/client',ClientController::class)->middleware(AuthMiddleware::c
 Route::get('/command',[CommandController::class,'index'])->name('commands.index')->middleware(AuthMiddleware::class);
 
 Route::get('/commands/{id}/edit', [CommandController::class, 'edit'])->name('commands.edit')->middleware(AuthMiddleware::class);
+Route::put('/commands/{id}/update', [CommandController::class, 'update'])->name('command.update')->middleware(AuthMiddleware::class);
 
-Route::get('/commands/{id}/show', [CommandController::class, 'show'])->name('commands.show')->middleware(AuthMiddleware::class);
+Route::get('/commands/{command}/show', [CommandController::class, 'show'])->name('commands.show')->middleware(AuthMiddleware::class);
 
 Route::delete('/commands/{id}', [CommandController::class, 'destroy'])->name('commands.destroy')->middleware(AuthMiddleware::class);
 

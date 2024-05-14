@@ -7,6 +7,7 @@ use Illuminate\Database\Seeder;
 // ProductSeeder.php
 use App\Models\Product;
 use Faker\Factory as Faker;
+use Illuminate\Support\Facades\DB;
 
 class ProductSeeder extends Seeder
 {
@@ -14,13 +15,17 @@ class ProductSeeder extends Seeder
     {
         $faker = Faker::create();
 
-        foreach (range(1, 10) as $index) {
-            Product::create([
-                'desg' => $faker->sentence,
+        $categoryIds = DB::table('categories')->pluck('id');
+
+        for ($i = 0; $i < 20; $i++) {
+            DB::table('products')->insert([
+                'desg' => $faker->word,
                 'qtes' => $faker->numberBetween(1, 100),
                 'pu' => $faker->randomFloat(2, 10, 1000),
-                'photo' => $faker->imageUrl($width = 200, $height = 200, ),
-                'category_id' => $faker->numberBetween(3, 17) 
+                'photo' => $faker->imageUrl(640, 480, 'technics'),
+                'category_id' => $faker->randomElement($categoryIds),
+                'created_at' => now(),
+                'updated_at' => now(),
             ]);
         }
     }
