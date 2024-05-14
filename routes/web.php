@@ -12,7 +12,9 @@ use Illuminate\Support\Facades\Route;
 
 
 
-
+Route::fallback(function () {
+    return view('error404');
+});
 
 Route::get('',[HomeController::class,'index'])->name('home'); 
 
