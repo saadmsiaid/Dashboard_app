@@ -34,7 +34,8 @@ Route::delete('logout',[AuthController::class , 'logout'])->name('auth.logout');
 Route::get('insc',[AuthController::class , 'insc'])->name('auth.insc');
 Route::post('inscrire',[AuthController::class , 'inscrire'])->name('auth.inscrire');
 
-
+Route::get('/profile',[AuthController::class ,'edit'])->name('user.edit')->middleware(AuthMiddleware::class);
+Route::put('/profile/{id}',[AuthController::class ,'update'])->name('user.update')->middleware(AuthMiddleware::class);
 
 
 

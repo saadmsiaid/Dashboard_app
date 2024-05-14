@@ -67,5 +67,33 @@ class AuthController extends Controller
     return to_route('auth.login');
     
     }
+public function edit(){
+    $id = Auth::id();
+    $user = User::findOrFail($id);
+   // dd($admin);
+   return view('user.profile',compact('user'));
+}
+
+    public function update(Request $request, $id)
+    {
+       
+        $validatedData = $request->validate([
+            'name'=> 'required',
+            'password'=> 'required'
+        ]);
+     //   dd('i get here');
+
+        $user = User::findOrFail($id);
+
+        $user->name = $validatedData['name'];
+
+        if ($request->filled('password')) {
+            $user->password = bcrypt($validatedData['password']);
+        }
+
+        $user->save();
+
+        return redirect()->route('auth.login')->with('success', 'User updated successfully');
+    }
 
 }

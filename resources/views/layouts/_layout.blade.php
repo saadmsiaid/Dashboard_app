@@ -50,7 +50,7 @@
                         <a href="{{route('categories.index')}}" class="nav-item nav-link">Categories</a>
                         <a href="{{route('client.index')}}" class="nav-item nav-link">Clients</a>
                          <a href="{{route('commands.index')}}" class="nav-item nav-link">Commands</a>
-                        <a href="#contact" class="nav-item nav-link">profile</a>
+                        <a href="{{route('user.edit')}}" class="nav-item nav-link">profile</a>
                     </div>
                     @auth
                         
