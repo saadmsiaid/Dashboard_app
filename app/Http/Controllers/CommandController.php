@@ -49,19 +49,22 @@ class CommandController extends Controller
      */
     public function edit($id)
     {
+     
         $command = Command::with('products')->findOrFail($id);
-        $clients = Client::all();
+        $clients = Client::all();  
+      
         return view('command.edit', compact('command','clients'));
     }
 
     public function update(Request $request, $id)
     {
+      
         $validatedData = $request->validate([
             'client_id' => 'required|exists:clients,id',
             'status' => 'required|string',
             'products' => 'required' 
         ]);
-    
+         // dd("hey");
         DB::beginTransaction();
     
         try {
